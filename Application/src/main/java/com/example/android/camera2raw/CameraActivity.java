@@ -17,7 +17,11 @@
 package com.example.android.camera2raw;
 
 import android.app.Activity;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 /**
  * Activity displaying a fragment that implements RAW photo captures.
@@ -28,11 +32,14 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, Camera2RawFragment.newInstance())
                     .commit();
         }
+
+
     }
 
 }
