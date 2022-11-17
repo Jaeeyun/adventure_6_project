@@ -627,6 +627,7 @@ public class Camera2RawFragment extends Fragment
     //bluetooth 관련 코드
     private static final String TaG = "bluetooth2";
     Button btnLed1;
+    Button light_off_btn;
     TextView txtArduino;
     Handler h;
 
@@ -642,16 +643,81 @@ public class Camera2RawFragment extends Fragment
 
     //Bluetooth module>수정필요
     private static String address = "00:20:10:08:AF:D0";
+    //입력된 컨셉에 따른 아두이노 데이터
+    int btn_adu = -1;
+
+    //컨셉 선택
+    final String[] options
+            = new String[] {"가벼운", "부드러운", "긍정적인", "편안한", "평온한", "무거운", "거친", "부정적", "불편한", "무서운"};
+    final String[] backgroundValue
+            = new String[]{ "노란색, 주황색, 흰색", "파란색, 흰색", "주황색, 노란색",
+            "초록색, 흰색", "초록색, 회색", "초록색, 회색", "파란색, 갈색", "검은색, 빨간색, 파란색", "검은색", "검은색, 자주색"};
+    private int selectedIndex = -1;
+    private String recommendedBackground = "아직 선택된 컨셉이 없습니다.";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_camera2_basic, container, false);
+
         final ImageView image = (ImageView)v.findViewById(R.id.pengsu);
         image.setVisibility(View.INVISIBLE);
         final Button frame_help = (Button)v.findViewById(R.id.frame_help);
         final Button frame_off = (Button)v.findViewById(R.id.frame_help_off);
         frame_off.setVisibility(View.GONE);
+        final Button concept_select_btn = (Button)v.findViewById(R.id. concept_select_btn);
+        final Button background_recommend_btn = (Button)v.findViewById(R.id. background_recommend_btn);
+        light_off_btn = (Button)v.findViewById(R.id.light_off_btn);
+        btnLed1 = (Button) v.findViewById(R.id.btnLed1);
+
+
+        //컨셉 선택
+        concept_select_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("컨셉 선택").setSingleChoiceItems(options, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedIndex = i;
+                        Toast.makeText(getActivity(), "선택된 옵션: " + options[i], Toast.LENGTH_SHORT).show();
+                        btn_adu = i;
+                    }
+                });
+
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        recommendedBackground = options[selectedIndex]+"에 해당하는 배경 색은 " + backgroundValue[selectedIndex] + "입니다.";
+                        Toast.makeText(getActivity(),  recommendedBackground, Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getActivity(), "취소되었습니다.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        //배경색 추천
+        background_recommend_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("배경 추천").setMessage(recommendedBackground);
+                builder.setPositiveButton("확인", null);
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        //구도 잡기 on
         frame_help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -660,6 +726,8 @@ public class Camera2RawFragment extends Fragment
                 frame_off.setVisibility(View.VISIBLE);
             }
         });
+
+        //구도 잡기 off
         frame_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -670,7 +738,6 @@ public class Camera2RawFragment extends Fragment
         });
 
         //bluetooth 관련 코드
-        btnLed1 = (Button) v.findViewById(R.id.btnLed1);
         txtArduino = (TextView) v.findViewById(R.id.txtArduino);
         h = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -685,6 +752,7 @@ public class Camera2RawFragment extends Fragment
                             sb.delete(0, sb.length());
                             txtArduino.setText("Data from Arduino: " + sbprint);
                             btnLed1.setEnabled(true);
+                            light_off_btn.setEnabled(true);
                         }
                         break;
                 }
@@ -697,7 +765,30 @@ public class Camera2RawFragment extends Fragment
         btnLed1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mConnectedThread.write("1");
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                if (btn_adu == -1){
+                    Toast.makeText(getActivity(), "컨셉을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if (btn_adu == 0 || btn_adu == 4){
+                    mConnectedThread.write("1");
+                }
+                else if (btn_adu == 1 || btn_adu == 2 || btn_adu == 3){
+                    mConnectedThread.write("2");
+                }
+                else if (btn_adu == 6){
+                    mConnectedThread.write("3");
+                }
+                else if (btn_adu == 7 || btn_adu == 5 || btn_adu == 8 || btn_adu == 9){
+                    mConnectedThread.write("4");
+                }
+            }
+        });
+
+        //기계 off
+        light_off_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mConnectedThread.write("5");
             }
         });
 

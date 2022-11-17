@@ -65,18 +65,51 @@
             android:layout_gravity="center_vertical|end"
             android:padding="20dp"
             android:src="@drawable/ic_action_info" />
+
+        <Button
+            android:id="@+id/light_off_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="27dp"
+            android:background="#00bfff"
+            android:layout_gravity="center_vertical|end"
+            android:text="기계 off"
+            android:textColor="#fff" />
+
         <Button
             android:id="@+id/btnLed1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="데이터 전송"
+            android:text="기계 on"
             android:background="#00bfff"
             android:textColor="#fff"
             android:layout_marginBottom="27dp" />
 
+        <Button
+            android:id="@+id/concept_select_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="27dp"
+            android:background="#00bfff"
+            android:text="컨셉 선택"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/background_recommend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="27dp"
+            android:background="#00bfff"
+            android:text="배경 추천"
+            android:textColor="#fff" />
+
+
         <TextView
             android:id="@+id/txtArduino"
             android:layout_width="54dp"
+            android:layout_gravity="center|bottom"
             android:layout_height="42dp"
             android:text="Text1" />
 

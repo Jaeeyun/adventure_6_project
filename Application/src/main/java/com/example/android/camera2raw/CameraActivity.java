@@ -38,8 +38,6 @@ public class CameraActivity extends Activity {
                     .replace(R.id.container, Camera2RawFragment.newInstance())
                     .commit();
         }
-
-
     }
 
 }
