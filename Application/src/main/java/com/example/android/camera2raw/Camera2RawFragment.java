@@ -642,7 +642,7 @@ public class Camera2RawFragment extends Fragment
     static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     //Bluetooth module>수정필요
-    private static String address = "00:20:10:08:AF:D0";
+    private static String address = "00:20:10:08:B1:1D";
     //입력된 컨셉에 따른 아두이노 데이터
     int btn_adu = -1;
 
